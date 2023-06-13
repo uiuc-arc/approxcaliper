@@ -1,0 +1,44 @@
+# You can define multiple configs below;
+# each config must have a key "__task__" that defines which task it is applied to.
+# "__task__" can be "train", "prune", "lr-fac".
+train:
+  __task__: train
+  __dnn__:
+    __cls__: gem.gem_lanenet.pl.LaneNetPL
+    dataset_prefix: gem/data/tusimple
+    lr: 2.0e-4  # Learning rate (Adam optimizer)
+    batch_size: 4
+    scheduler_args: # See `ReduceLROnPlateau` in PyTorch for this one.
+      factor: 0.1
+      patience: 20
+      min_lr: 1.0e-6
+    encoder_arch: darknet # current options are (1) 'VGG' (2) 'darknet'
+  n_epochs: 100
+  gpus: [1]  # Number of GPUs to use. Can also be a list of GPU IDs, e.g., [0, 1]
+prune-iter:
+  __task__: prune
+  __dnn__:
+    __cls__: gem.gem_lanenet.pl.LaneNetPL
+    dataset_prefix: gem/data/tusimple
+    lr: 1.0e-4
+    scheduler_args: null  # Don't use a learning rate scheduler
+  gpus: [0]
+  prune_scheduler: lottery
+  pruner: l1
+  prune_ratio: 0.9
+  n_prune_steps: 10
+  train_epochs: 10
+lr-iter:
+  __task__: lr-fac
+  __dnn__:
+    __cls__: gem.gem_lanenet.pl.LaneNetPL
+    dataset_prefix: gem/data/tusimple
+    lr: 1.0e-4
+    scheduler_args: null  # Don't use a learning rate scheduler
+  early_stop:
+    min_delta: 0.002
+    patience: 3
+  gpus: [0]
+  final_sparsity: 0.995
+  n_lr_steps: 12
+  train_epochs: 10

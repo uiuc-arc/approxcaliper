@@ -1,0 +1,48 @@
+train-heading:
+  __task__: train
+  __dnn__:
+    __cls__: cropfollow.agdnns.nav.NavNetPL
+    backbone_name: resnet18
+    training_target: heading
+    dataset_prefix: data/nav/
+    dataloader_args:
+      batch_size: 16
+      num_workers: 16
+    scheduler_args:
+      factor: 0.2
+      patience: 10
+      min_lr: 1.0e-6
+    optimizer_args:
+      lr: 1.0e-4
+  n_epochs: 100
+  gpus: [0]
+train-distance:
+  __task__: train
+  __args__:
+    __cls__: cropfollow.agdnns.nav.NavNetPL
+    backbone_name: resnet18
+    training_target: distance
+    dataset_prefix: data/nav/
+    dataloader_args:
+      batch_size: 16
+      num_workers: 16
+    scheduler_args:
+      factor: 0.2
+      patience: 10
+      min_lr: 1.0e-6
+    optimizer_args:
+      lr: 1.0e-4
+  n_epochs: 100
+  gpus: [1]
+prune-iter:
+  __task__: compress
+  __args__:  # Other args come from the checkpoint
+    scheduler_args: null  # Don't use a learning rate scheduler
+    optimizer_args:
+      lr: 1.0e-5
+  prune_scheduler: lottery
+  pruner: l1
+  prune_ratio: 0.99
+  n_prune_steps: 40
+  train_epochs: 15
+  gpus: [0]

@@ -1,0 +1,3 @@
+[submodule "gem/gemsim"]
+	path = gem/gemsim
+	url = https://github.com/GEM-Illinois/POLARIS_GEM_e2.git

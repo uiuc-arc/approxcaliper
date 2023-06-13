@@ -1,0 +1,6 @@
+numpy>=1.19
+onnx
+opencv-python>=4
+pillow>=8
+rospkg
+scikit-learn>=0.24
